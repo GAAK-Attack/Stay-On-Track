@@ -1,0 +1,5 @@
+# Dependencies
+package-lock.json
+
+# SQL Settings
+settings.js
