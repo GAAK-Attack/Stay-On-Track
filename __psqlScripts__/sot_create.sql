@@ -1,6 +1,4 @@
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS contacts;
-DROP TABLE IF EXISTS engagements;
+DROP TABLE IF EXISTS users, contacts, engagements CASCADE;
 
 CREATE TYPE status AS ENUM ('pending', 'rejected', 'accepted');
 
