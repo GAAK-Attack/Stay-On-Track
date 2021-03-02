@@ -18,6 +18,18 @@ app.use('/build', express.static(path.resolve(__dirname, '../build')));
 // make client folder available for use within the app
 app.use(express.static(path.resolve(__dirname, '../client')));
 
+if (process.env.NODE_ENV === 'production') {
+  // allows build to populate properly when called in index.html
+  app.get('/build/bundle.js', (req, res) => {
+    console.log(path.join(__dirname, '../build/bundle.js'));
+    res.status(200).sendFile(path.join(__dirname, '../build/bundle.js'));
+  });
+  // homepage, will fire index.html, which calls App.jsx
+  app.get('/', (req, res) => {
+    res.status(200).sendFile(path.join(__dirname, '../index.html'));
+  });
+}
+
 app.get('/', (req, res, next) =>
   res.status(200).sendFile(path.resolve(__dirname, '../client/index.html'))
 );
@@ -29,6 +41,18 @@ app.post('/login', authController.login, (req, res, next) =>
 app.post('/signup', authController.signUp, (req, res, next) =>
   res.status(200).send(true)
 );
+
+app.use((err, req, res, next) => {
+  const defaultErr = {
+    log: 'Express error handler caught unknown middleware error',
+    error: '',
+    status: 500,
+    message: { err: 'An error occured' },
+  };
+  const errorObj = { ...defaultErr, ...err };
+  console.log(err);
+  return res.status(errorObj.status).json(errorObj.message);
+});
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
