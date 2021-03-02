@@ -10,6 +10,7 @@ const authController = {};
 
 // user login, called when post request /login is received
 authController.login = (req, res, next) => {
+    if ( !req.body.username || !req.body.password) return next({log: 'No body Data recieved',status: 400,message: { err: `authController.login, ${err.stack}`}})
     // query to the database, will grab password linked to username received from client
     const getPassQuery = `SELECT password FROM users WHERE username = '${req.body.username}'`
 
@@ -18,7 +19,7 @@ authController.login = (req, res, next) => {
     // function will fire if a successful response is received
     .then(response => {
         // will cross reference encrypted password from database with plain text password received from client
-        bcrypt.compare(req.body.password, response.rows[1].password, function(err, result) {
+        bcrypt.compare(req.body.password, response.rows[0].password, function(err, result) {
             // if passwords match allow login; if not, respond with a failed authentication 
             return result ? next() : next({log: 'Database error',status: 403,message: { err: `authController.login, ${err.stack}`}})
         });
@@ -68,5 +69,5 @@ authController.signUp = (req, res, next) => {
     });
 } 
 
-// exports authController object that was populated during 
+// exports authController object that was populated during file run
 module.exports = authController;

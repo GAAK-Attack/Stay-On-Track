@@ -1,13 +1,29 @@
 const { Pool } = require('pg')
 
 // direct link to the database
+const TESTING_URI = 'postgres://qtkxnxzk:2BJgdvuEhJ_jDRhjv0mRvHl8HqvbJmF9@ziggy.db.elephantsql.com:5432/qtkxnxzk'
 const PG_URI = 'postgres://jbbzinao:OslM_aTTgi71R38LFvWXUbVw2fz5HVW5@ziggy.db.elephantsql.com:5432/jbbzinao'
 
+
+// if (process.env.NODE_ENV === 'test') {
+    const pool = new Pool({
+        // setting connection string to allow database connection
+        connectionString: TESTING_URI
+    })
+    console.log("model ln 13", process.env.NODE_ENV)
+
+    // } else {
+    // const pool = new Pool({
+    //     // setting connection string to allow database connection
+    //     connectionString: PG_URI
+    // })
+    // }
+
 // creating a new constructor function instance
-const pool = new Pool({
-    // setting connection string to allow database connection
-    connectionString: PG_URI
-})
+// const pool = new Pool({
+//     // setting connection string to allow database connection
+//     connectionString: PG_URI
+// })
 
 // exporting an object with a query method
 module.exports = {
