@@ -16,7 +16,7 @@ CREATE TABLE contacts (
   "contact_id" SERIAL PRIMARY KEY,
   "first_name" VARCHAR NOT NULL,
   "last_name" VARCHAR NOT NULL,
-  "company" VARCHAR,
+  "company" VARCHAR NOT NULL,
   "email" VARCHAR
 );
 
