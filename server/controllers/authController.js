@@ -67,6 +67,7 @@ authController.signUp = (req, res, next) => {
     db.query(createUserQuery)
       // function will fire if a successful response is received
       .then((response) => {
+        res.locals.result = true;
         // will fire route handler which is set to respond with 200 status
         next();
       })

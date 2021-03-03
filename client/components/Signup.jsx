@@ -1,13 +1,12 @@
 import React from 'react';
 
-const Signup = () => {
+const Signup = (props) => {
   const handleSignup = (event) => {
     const firstName = document.querySelector('#firstName').value;
     const lastName = document.querySelector('#lastName').value;
     const username = document.querySelector('#usernameSignup').value;
     const password = document.querySelector('#passwordSignup').value;
-    console.log('signin button clicked');
-    fetch('/signup', {
+    const options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -16,18 +15,12 @@ const Signup = () => {
         username,
         password,
       }),
-    })
-      .then((res) => {
-        res.json();
-        console.log({ res });
-        // window.location.replace('http://localhost:8080/login');
-      })
-      .then(
-        (result) => {},
-        (error) => {
-          console.log(error);
-        }
-      );
+    };
+
+    console.log('signin button clicked');
+    fetch('http://localhost:8080/signup', options)
+      .then((data) => data.json())
+      .then((parsed) => props.switchLoggedIn(parsed.result));
   };
   return (
     <div className="background">

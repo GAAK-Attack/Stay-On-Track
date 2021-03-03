@@ -9,8 +9,8 @@ const AuthContainer = () => {
 
   return (
     <div>
-      {loggedIn ? null : toggle ? <Login /> : <Signup />}
-      <Protected />
+      {loggedIn ? <Protected /> : toggle ? <Login /> : <Signup switchLoggedIn={switchLoggedIn}/>}
+
     </div>
   );
 };
