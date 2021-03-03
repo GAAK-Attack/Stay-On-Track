@@ -15,8 +15,11 @@ const pool = new Pool({
 });
 
 module.exports = {
-  query: (text, params, callback) => {
+  query: async (text, params, callback) => {
     console.log('Executed query:', text);
     return pool.query(text, params, callback);
-  }
+  },
+  // necessary to bind the 'this' inside pool.end to pool, otherwise
+  // end won't work in the test file
+  end: pool.end.bind(pool)
 };
