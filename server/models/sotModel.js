@@ -1,8 +1,16 @@
 const { Pool } = require('pg');
-const { PG_URI } = require('../settings.js');
+const { PG_PROD_URI, PG_TEST_URI } = require('../settings.js');
+
+let activeURI;
+  
+if (process.env.NODE_ENV === 'test') {
+  activeURI = PG_TEST_URI;
+} else {
+  activeURI = PG_PROD_URI;
+}
 
 const pool = new Pool({
-  connectionString: PG_URI
+  connectionString: activeURI
 });
 
 module.exports = {
