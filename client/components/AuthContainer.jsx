@@ -4,13 +4,18 @@ import Login from './Login.jsx';
 import Protected from './Protected.jsx';
 
 const AuthContainer = () => {
-  const [loggedIn, switchLoggedIn] = useState(false);
+  const [loggedIn, switchLoggedIn] = useState(true);
   const [toggle, switchToggle] = useState(false);
 
   return (
     <div>
-      {loggedIn ? <Protected /> : toggle ? <Login /> : <Signup switchLoggedIn={switchLoggedIn}/>}
-
+      {loggedIn ? (
+        <Protected />
+      ) : toggle ? (
+        <Login />
+      ) : (
+        <Signup switchLoggedIn={switchLoggedIn} />
+      )}
     </div>
   );
 };

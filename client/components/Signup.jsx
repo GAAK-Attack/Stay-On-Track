@@ -13,6 +13,7 @@ const Signup = (props) => {
         firstName,
         lastName,
         username,
+        email,
         password,
       }),
     };
@@ -27,6 +28,7 @@ const Signup = (props) => {
       <div className="signup">
         <input id="firstName" type="text" placeholder="first name" />
         <input id="lastName" type="text" placeholder="last name" />
+        <input id="emailSignup" type="text" placeholder="email" />
         <input id="usernameSignup" type="text" placeholder="username" />
         <input id="passwordSignup" type="password" placeholder="password" />
         <button id="signupButton" onClick={handleSignup}>
