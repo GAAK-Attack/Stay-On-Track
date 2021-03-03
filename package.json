@@ -34,5 +34,8 @@
     "webpack-cli": "^4.3.1",
     "webpack-dev-server": "^3.11.1"
   },
-  "homepage": "https://github.com/GAAK-Attack/Stay-On-Track#readme"
+  "homepage": "https://github.com/GAAK-Attack/Stay-On-Track#readme",
+  "devDependencies": {
+    "jest": "^26.6.3"
+  }
 }
