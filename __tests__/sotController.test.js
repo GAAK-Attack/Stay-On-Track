@@ -6,23 +6,22 @@ beforeAll(() => db.query('TRUNCATE users, contacts, engagements RESTART IDENTITY
 afterAll(async () => await db.end());
 
 describe('sotController users table tests', () => {
-  const mockReq = {
-    body: {
-      username: 'testUser',
-      password: 'test',
-      first_name: 'Testing',
-      last_name: 'Tester',
-    }
-  };
-  const mockRes = {
-    locals: {}
-  };
+  const mockReq = {};
+  const mockRes = {};
   const mockNext = (err) => {
     if (err) console.log('mockNext was passed an error:', err);
     return 'mockNext invoked';
   };
 
   it('sotController.addUser successfully adds a user without interval to the users table', async (done) => {
+    mockReq.body = {
+      username: 'testUser',
+      password: 'test',
+      first_name: 'Testing',
+      last_name: 'Tester',
+    }
+    mockRes.locals = {};
+
     await sotController.addUser(mockReq, mockRes, mockNext);
 
     let response = await db.query("SELECT * FROM users WHERE username='testUser'");
