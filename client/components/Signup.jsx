@@ -7,7 +7,7 @@ const Signup = () => {
     const username = document.querySelector('#usernameSignup').value;
     const password = document.querySelector('#passwordSignup').value;
     console.log('signin button clicked');
-    fetch('http://localhost:8080/signup', {
+    fetch('/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -18,8 +18,8 @@ const Signup = () => {
       }),
     })
       .then((res) => {
-        console.log({ res });
         res.json();
+        console.log({ res });
         // window.location.replace('http://localhost:8080/login');
       })
       .then(

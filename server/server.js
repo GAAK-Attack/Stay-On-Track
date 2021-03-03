@@ -41,7 +41,7 @@ app.post('/login', authController.login, (req, res, next) =>
 );
 // handles routes to signup, fires authController.signup; if information is added successfully, respond with 200 status and true
 app.post('/signup', authController.signUp, (req, res, next) =>
-  res.status(200).send(true)
+  res.status(200).send('true')
 );
 
 app.use((err, req, res, next) => {
