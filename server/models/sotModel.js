@@ -4,6 +4,7 @@ const { PG_PROD_URI, PG_TEST_URI } = require('../settings.js');
 let activeURI;
   
 if (process.env.NODE_ENV === 'test') {
+  console.log('***Using the testing database***');
   activeURI = PG_TEST_URI;
 } else {
   activeURI = PG_PROD_URI;
@@ -17,6 +18,5 @@ module.exports = {
   query: (text, params, callback) => {
     console.log('Executed query:', text);
     return pool.query(text, params, callback);
-  },
-  connect: pool.connect
+  }
 };
