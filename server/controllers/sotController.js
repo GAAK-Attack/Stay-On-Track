@@ -15,7 +15,7 @@ sotController.addUser = async (req, res, next) => {
     req.body.password,
     req.body.first_name,
     req.body.last_name,
-    // could've been 'req.body.interval ?? null' but Jest doesn't understand ??
+    // could've been 'req.body.interval ?? null' but Jest doesn't understand nullish coalesce
     interval
   ];
 
@@ -27,6 +27,32 @@ sotController.addUser = async (req, res, next) => {
     return next({
       log: `ERROR in sotController.addUser: ${err}`,
       message: { err: 'An error occurred while trying to add a user to the database'}
+    })
+  }
+};
+
+sotController.addContact = async (req, res, next) => {
+  const addContactQuery = 'INSERT INTO contacts (first_name, last_name, company, email) ' +
+  'VALUES ($1, $2, $3, $4) RETURNING *';
+
+  let email;
+  if (req.body.email === undefined) email = null;
+  else email = req.body.email;
+
+  const contactValues = [
+    req.body.first_name,
+    req.body.last_name,
+    req.body.company,
+    email
+  ];
+
+  try {
+    const response = await db.query(addContactQuery, contactValues);
+    res.locals.newContact = response.rows[0];
+  } catch(err) {
+    return next({
+      log: `ERROR in sotController.addContact: ${err}`,
+      message: { err: 'An error occurred while trying to add a contact to the database'}
     })
   }
 };
