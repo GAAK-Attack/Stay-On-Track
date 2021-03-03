@@ -53,37 +53,37 @@ authController.login = (req, res, next) => {
     });
 };
 
-// user initial signup, called when post request to /signup is received
-authController.signUp = (req, res, next) => {
-  console.log('inside signUp');
-  // creating the encrypted version of the password received from client
-  bcrypt.hash(req.body.password, SALT_WORK_FACTOR, function (err, hash) {
-    // query to the database, will create a new instance under users table, then store username, and encrypted password
-    const createUserQuery = `
-        INSERT INTO users (username, password)
-        VALUES ('${req.body.username}', '${hash}')`;
+// // user initial signup, called when post request to /signup is received
+// authController.signUp = (req, res, next) => {
+//   console.log('inside signUp');
+//   // creating the encrypted version of the password received from client
+//   bcrypt.hash(req.body.password, SALT_WORK_FACTOR, function (err, hash) {
+//     // query to the database, will create a new instance under users table, then store username, and encrypted password
+//     const createUserQuery = `
+//         INSERT INTO users (username, password)
+//         VALUES ('${req.body.username}', '${hash}')`;
 
-    // sending createUserQuery to the database
-    db.query(createUserQuery)
-      // function will fire if a successful response is received
-      .then((response) => {
-        // will fire route handler which is set to respond with 200 status
-        next();
-      })
-      // function will fire upon any error
-      .catch((err) => {
-        // return error handler
-        return next({
-          // will log Database Error
-          log: 'Database error',
-          // update status to 502
-          status: 502,
-          // pitch message stating which middleware failed along with the error
-          message: { err: `authController.signUp, ${err.stack}` },
-        });
-      });
-  });
-};
+//     // sending createUserQuery to the database
+//     db.query(createUserQuery)
+//       // function will fire if a successful response is received
+//       .then((response) => {
+//         // will fire route handler which is set to respond with 200 status
+//         next();
+//       })
+//       // function will fire upon any error
+//       .catch((err) => {
+//         // return error handler
+//         return next({
+//           // will log Database Error
+//           log: 'Database error',
+//           // update status to 502
+//           status: 502,
+//           // pitch message stating which middleware failed along with the error
+//           message: { err: `authController.signUp, ${err.stack}` },
+//         });
+//       });
+//   });
+// };
 
 // exports authController object that was populated during file run
 module.exports = authController;
