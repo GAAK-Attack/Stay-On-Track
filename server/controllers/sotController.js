@@ -15,7 +15,6 @@ sotController.addUser = async (req, res, next) => {
     req.body.password,
     req.body.first_name,
     req.body.last_name,
-    // could've been 'req.body.interval ?? null' but Jest doesn't understand nullish coalesce
     interval
   ];
 
@@ -27,7 +26,7 @@ sotController.addUser = async (req, res, next) => {
     return next({
       log: `ERROR in sotController.addUser: ${err}`,
       message: { err: 'An error occurred while trying to add a user to the database'}
-    })
+    });
   }
 };
 
@@ -49,12 +48,51 @@ sotController.addContact = async (req, res, next) => {
   try {
     const response = await db.query(addContactQuery, contactValues);
     res.locals.newContact = response.rows[0];
+    return next();
   } catch(err) {
     return next({
       log: `ERROR in sotController.addContact: ${err}`,
       message: { err: 'An error occurred while trying to add a contact to the database'}
-    })
+    });
   }
 };
+
+sotController.addEngagement = async (req, res, next) => {
+  const addEngagementQuery = 'INSERT INTO engagements (username, contact_id, method, notes) ' +
+  'VALUES ($1, $2, $3, $4) RETURNING *';
+
+  let notes;
+  if (req.body.notes === undefined) notes = null;
+  else notes = req.body.notes;
+
+  const engagementValues = [
+    req.body.username,
+    req.body.contact_id,
+    req.body.method,
+    notes
+  ];
+
+  try {
+    const response = await db.query(addEngagementQuery, engagementValues);
+
+    // need to get the first and last name of contact person
+    const contactId = response.rows[0].contact_id;
+    // safe to insert since getting contactId directly back from database
+    const contactee = await db.query(`SELECT * FROM contacts WHERE contact_id=${contactId}`);
+
+    // add the contact person's first and last name onto the response
+    res.locals.newEngagement = Object.assign(response.rows[0], {
+      contact_first_name: contactee.rows[0].first_name,
+      contact_last_name: contactee.rows[0].last_name
+    });
+
+    return next();
+  } catch(err) {
+    return next({
+      log: `ERROR in sotController.addEngagement: ${err}`,
+      message: { err: 'An error occurred while trying to add an engagement to the database'}
+    });
+  }
+}
 
 module.exports = sotController;
