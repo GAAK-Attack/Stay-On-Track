@@ -17,7 +17,7 @@ authController.login = (req, res, next) => {
       message: { err: `authController.login, ${err.stack}` },
     });
   // query to the database, will grab password linked to username received from client
-  const getPassQuery = `SELECT password FROM users WHERE username = '${req.body.username}'`;
+  const getPassQuery = `SELECT * FROM users WHERE username = '${req.body.username}'`;
 
   // sending getPassQuery to the database
   db.query(getPassQuery)
@@ -30,7 +30,11 @@ authController.login = (req, res, next) => {
         // if passwords match allow login; if not, respond with a failed authentication
         if (result === true) {
           res.locals.response = {
-            user: response.rows[0],
+            user: {
+              username: response.rows[0].username,
+              first_name: response.rows[0].first_name,
+              last_name: response.rows[0].last_name
+            },
             result: true
           }
 
