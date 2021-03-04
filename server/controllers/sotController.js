@@ -8,40 +8,43 @@ const sotController = {};
 
 sotController.addUser = async (req, res, next) => {
   // creating the encrypted version of the password received from client
-  await bcrypt.hash(req.body.password, SALT_WORK_FACTOR, async function (err, hash) {
-    // query to the database, will create a new instance under users table, then store username, and encrypted password
-    const addUserQuery = 'INSERT INTO users (username, password, first_name, last_name, interval) ' +
-    'VALUES ($1, $2, $3, $4, $5) RETURNING username, first_name, last_name';
+  const hash = bcrypt.hashSync(req.body.password, SALT_WORK_FACTOR);
 
-    let interval;
-    if (req.body.interval === undefined) interval = null;
-    else interval = req.body.interval;
+  // query to the database, will create a new instance under users table, then store username, and encrypted password
+  const addUserQuery = 'INSERT INTO users (username, password, first_name, last_name, interval) ' +
+  'VALUES ($1, $2, $3, $4, $5) RETURNING username, first_name, last_name';
 
-    const userValues = [
-      req.body.username,
-      hash,
-      req.body.first_name,
-      req.body.last_name,
-      interval
-    ];
+  // in the query, interval cannot be undefined. A value or null has to be passed in
+  let interval;
+  if (req.body.interval === undefined) interval = null;
+  else interval = req.body.interval;
 
-    try {
-      const response = await db.query(addUserQuery, userValues);
-      res.locals.newUser = response.rows[0];
-      return next();
-    } catch(err) {
-      return next({
-        log: `ERROR in sotController.addUser: ${err}`,
-        message: { err: 'An error occurred while trying to add a user to the database'}
-      });
-    }
-  });
+  const userValues = [
+    req.body.username,
+    hash,
+    req.body.first_name,
+    req.body.last_name,
+    interval
+  ];
+
+  try {
+    const response = await db.query(addUserQuery, userValues);
+
+    res.locals.newUser = response.rows[0];
+    return next();
+  } catch(err) {
+    return next({
+      log: `ERROR in sotController.addUser: ${err}`,
+      message: { err: 'An error occurred while trying to add a user to the database'}
+    });
+  }
 };
 
 sotController.addContact = async (req, res, next) => {
   const addContactQuery = 'INSERT INTO contacts (first_name, last_name, company, email) ' +
   'VALUES ($1, $2, $3, $4) RETURNING *';
 
+  // in the query, email cannot be undefined. A value or null has to be passed in
   let email;
   if (req.body.email === undefined) email = null;
   else email = req.body.email;
@@ -55,6 +58,7 @@ sotController.addContact = async (req, res, next) => {
 
   try {
     const response = await db.query(addContactQuery, contactValues);
+
     res.locals.newContact = response.rows[0];
     return next();
   } catch(err) {
@@ -69,6 +73,7 @@ sotController.addEngagement = async (req, res, next) => {
   const addEngagementQuery = 'INSERT INTO engagements (username, contact_id, method, notes) ' +
   'VALUES ($1, $2, $3, $4) RETURNING *';
 
+  // in the query, notes cannot be undefined. A value or null has to be passed in
   let notes;
   if (req.body.notes === undefined) notes = null;
   else notes = req.body.notes;
@@ -82,7 +87,6 @@ sotController.addEngagement = async (req, res, next) => {
 
   try {
     const response = await db.query(addEngagementQuery, engagementValues);
-
     // need to get the first and last name of contact person
     const contactId = response.rows[0].contact_id;
     // safe to insert since getting contactId directly back from database
