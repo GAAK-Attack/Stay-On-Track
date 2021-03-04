@@ -10,4 +10,11 @@ router.post('/add',
   }
 );
 
+router.get('/view',
+  sotController.getUsersEngagements,
+  (req, res) => {
+    return res.status(200).json(res.locals.userEngagements);
+  }
+);
+
 module.exports = router;
