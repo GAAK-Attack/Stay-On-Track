@@ -1,24 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import Rows from './Rows.jsx';
 
-const Info = () => {
-  const [info] = useState(0);
-  useEffect(() => {
-    fetch(`/api/contacts`)
-      .then((data) => data.json())
-      .then((res) => {
-        // console.log('res.data.columns: ', res.data.rows)
-        const headers = res.data.columns.map((header) => [
-          header.column_name,
-          header.data_type,
-        ]);
-        const entries = res.data.rows;
+const fetchClick = () => {
+  fetch(`/contact`)
+    .then((data) => data.json())
+    .then((res) => {
+      console.log('res.data.columns: ', res.data.rows);
+      // const headers = res.data.columns.map((header) => [
+      // ]);
+      const entries = res.data.rows;
+    })
+    .catch((error) => console.log('error', error));
+};
 
-        // setActivePage();
-        // setHeaders(headers);
-        // setEntries(entries);
-      })
-      .catch((error) => console.log('error', error));
-  }, []);
+const Contacts = () => {
   return (
     <div>
       Looks like we made it
@@ -26,31 +21,21 @@ const Info = () => {
       <table className="d">
         <tbody>
           <tr>
-            <th>Name</th>
+            <th>first name</th>
+            <th>last name</th>
             <th>e-mail</th>
             <th>company</th>
             <th>initial contact</th>
             <th>next contact</th>
           </tr>
-          <tr>
-            <td>Alfreds Futterkiste</td>
-            <td>Maria Anders</td>
-            <td>Germany</td>
-          </tr>
-          <tr>
-            <td>Island Trading</td>
-            <td>Helen Bennett</td>
-            <td>UK</td>
-          </tr>
-          <tr>
-            <td>Magazzini Alimentari Riuniti</td>
-            <td>Giovanni Rovelli</td>
-            <td>Italy</td>
-          </tr>
+          <Rows />
         </tbody>
       </table>
+      <button onClick={fetchClick} type="submit">
+        Fetch Contacts
+      </button>
     </div>
   );
 };
 
-export default Info;
+export default Contacts;

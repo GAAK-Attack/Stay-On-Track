@@ -5,8 +5,10 @@ import Signup from './components/Signup.jsx';
 import Todo from './components/Todo.jsx';
 import Table from './components/Table.jsx';
 import Dashboard from './components/Dashboard.jsx';
+import AddContact from './components/AddContact.jsx';
 
-import Info from './components/Contacts.jsx';
+import Contacts from './components/Contacts.jsx';
+import AddEngagement from './components/AddEngagement.jsx';
 
 function App() {
   // useEffect(() => {
@@ -19,7 +21,9 @@ function App() {
       <Todo />
       <Table />
       <Dashboard />
-      <Info />
+      <Contacts />
+      <AddContact />
+      <AddEngagement />
     </div>
   );
 }

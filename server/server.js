@@ -2,8 +2,6 @@
 const express = require('express');
 // used for setting up absolute paths
 const path = require('path');
-// allows use of methods on the authController object in authController.js
-const authController = require('./controllers/authController.js');
 
 // sets app to express invoked
 // the port app will be listening on
