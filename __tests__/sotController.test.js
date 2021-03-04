@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 const db = require('../server/models/sotModel.js');
 const sotController = require('../server/controllers/sotController.js');
 
@@ -27,13 +29,11 @@ describe('sotController users table tests', () => {
     let response = await db.query("SELECT * FROM users WHERE username='testUser'");
     response = response.rows[0];
 
-    expect(response).toEqual({
-      username: 'testUser',
-      password: 'test',
-      first_name: 'Testing',
-      last_name: 'Tester',
-      interval: null
-    })
+    expect(response.username).toBe('testUser');
+    expect(bcrypt.compareSync(mockReq.body.password, response.password)).toBe(true);
+    expect(response.first_name).toBe('Testing');
+    expect(response.last_name).toBe('Tester');
+    expect(response.interval).toBe(null);
 
     done();
   });
