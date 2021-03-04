@@ -130,4 +130,22 @@ sotController.getAllContacts = async (req, res, next) => {
   }
 };
 
+sotController.getUsersEngagements = async (req, res, next) => {
+  const getUsersEngagementsQuery = "SELECT * FROM engagements WHERE username=$1 ORDER BY time_created ASC";
+  const username = [req.body.username];
+
+  try {
+    const response = await db.query(getUsersEngagementsQuery, username);
+
+    res.locals.userEngagements = response.rows;
+
+    return next();
+  } catch(err) {
+    return next({
+      log: `ERROR in sotController.getUsersEngagements: ${err}`,
+      message: { err: 'An error occurred while trying to get engagements from the database'}
+    });
+  }
+};
+
 module.exports = sotController;
