@@ -7,13 +7,14 @@ beforeAll(() => db.query('TRUNCATE users, contacts, engagements RESTART IDENTITY
 
 afterAll(async () => await db.end());
 
+const mockNext = (err) => {
+  if (err) console.log('mockNext was passed an error:', err);
+  return 'mockNext invoked';
+};
+
 describe('sotController users table tests', () => {
   const mockReq = {};
   const mockRes = {};
-  const mockNext = (err) => {
-    if (err) console.log('mockNext was passed an error:', err);
-    return 'mockNext invoked';
-  };
 
   it('sotController.addUser successfully adds a user without interval to the users table', async (done) => {
     mockReq.body = {
@@ -39,7 +40,7 @@ describe('sotController users table tests', () => {
   });
 
   it('After adding a user to the users table, sotController.addUser should store the username, ' +
-    'first_name, and last_name, on res.locals.newUser', () => {
+    'first_name, and last_name, on res.locals.response.user', () => {
     expect(mockRes.locals.response.user.username).toBe('testUser');
     expect(mockRes.locals.response.user.first_name).toBe('Testing');
     expect(mockRes.locals.response.user.last_name).toBe('Tester');
@@ -49,10 +50,6 @@ describe('sotController users table tests', () => {
 describe('sotController contacts table tests', () => {
   const mockReq = {};
   const mockRes = {};
-  const mockNext = (err) => {
-    if (err) console.log('mockNext was passed an error:', err);
-    return 'mockNext invoked';
-  };
 
   it('sotController.addContact successfully adds a contact without an email to the contacts table', async (done) => {
     mockReq.body = {
@@ -118,15 +115,34 @@ describe('sotController contacts table tests', () => {
     expect(mockRes.locals.newContact.company).toBe('TypeScript');
     expect(mockRes.locals.newContact.email).toBe('type.test@typescript.com');
   });
+
+  it('sotController.getAllContacts should add all contacts in the database to res.locals.response.allContacts', async (done) => {
+    mockRes.locals = {};
+
+    await sotController.getAllContacts(mockReq, mockRes, mockNext);
+
+    expect(mockRes.locals.response.allContacts[0]).toEqual({
+      contact_id: 1,
+      first_name: 'Contact',
+      last_name: 'Person',
+      company: 'JavaScript',
+      email: null
+    });
+    expect(mockRes.locals.response.allContacts[1]).toEqual({
+      contact_id: 2,
+      first_name: 'Type',
+      last_name: 'Test',
+      company: 'TypeScript',
+      email: 'type.test@typescript.com'
+    });
+
+    done();
+  });
 });
 
 describe('sotController engagements table tests', () => {
   const mockReq = {};
   const mockRes = {};
-  const mockNext = (err) => {
-    if (err) console.log('mockNext was passed an error:', err);
-    return 'mockNext invoked';
-  };
 
   it('sotController.addEngagement successfully adds an engagement without notes to the engagements table', async (done) => {
     mockReq.body = {

@@ -109,6 +109,25 @@ sotController.addEngagement = async (req, res, next) => {
       message: { err: 'An error occurred while trying to add an engagement to the database'}
     });
   }
-}
+};
+
+sotController.getAllContacts = async (req, res, next) => {
+  const getAllContactsQuery = 'SELECT * FROM contacts';
+
+  try {
+    const response = await db.query(getAllContactsQuery);
+
+    if (res.locals.response === undefined) res.locals.response = {};
+
+    res.locals.response.allContacts = response.rows;
+
+    return next();
+  } catch(err) {
+    return next({
+      log: `ERROR in sotController.getAllContacts: ${err}`,
+      message: { err: 'An error occurred while trying to get all contacts from the database'}
+    });
+  }
+};
 
 module.exports = sotController;
