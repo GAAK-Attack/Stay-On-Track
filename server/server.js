@@ -8,9 +8,9 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 
-const userRouter = require(path.resolve(__dirname, 'server', 'routers', 'users.js'));
-const contactRouter = require(path.resolve(__dirname, 'server', 'routers', 'contacts.js'));
-const engagementRouter = require(path.resolve(__dirname, 'server', 'routers', 'engagements.js'));
+const userRouter = require(path.join(__dirname, 'routers', 'users.js'));
+const contactRouter = require(path.join(__dirname, 'routers', 'contacts.js'));
+const engagementRouter = require(path.join(__dirname, 'routers', 'engagements.js'));
 
 // allows app to read .json
 app.use(express.json());
