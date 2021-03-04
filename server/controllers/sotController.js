@@ -1,19 +1,34 @@
 const db = require('../models/sotModel.js');
+// requiring brypt which is used for encryption
+const bcrypt = require('bcrypt');
+// current number of salt rounds to be used throughout file
+const SALT_WORK_FACTOR = 10;
 
 const sotController = {};
 
 sotController.addUser = async (req, res, next) => {
+<<<<<<< HEAD
   const addUserQuery =
     'INSERT INTO users (username, password, first_name, last_name, interval) ' +
     'VALUES ($1, $2, $3, $4, $5) RETURNING username, first_name, last_name';
 
+=======
+  // creating the encrypted version of the password received from client
+  const hash = bcrypt.hashSync(req.body.password, SALT_WORK_FACTOR);
+
+  // query to the database, will create a new instance under users table, then store username, and encrypted password
+  const addUserQuery = 'INSERT INTO users (username, password, first_name, last_name, interval) ' +
+  'VALUES ($1, $2, $3, $4, $5) RETURNING username, first_name, last_name';
+
+  // in the query, interval cannot be undefined. A value or null has to be passed in
+>>>>>>> main
   let interval;
   if (req.body.interval === undefined) interval = null;
   else interval = req.body.interval;
 
   const userValues = [
     req.body.username,
-    req.body.password,
+    hash,
     req.body.first_name,
     req.body.last_name,
     interval,
@@ -21,7 +36,12 @@ sotController.addUser = async (req, res, next) => {
 
   try {
     const response = await db.query(addUserQuery, userValues);
-    res.locals.newUser = response.rows[0];
+    
+    res.locals.response = {
+      user: response.rows[0],
+      result: true
+    }
+
     return next();
   } catch (err) {
     return next({
@@ -38,6 +58,7 @@ sotController.addContact = async (req, res, next) => {
     'INSERT INTO contacts (first_name, last_name, company, email) ' +
     'VALUES ($1, $2, $3, $4) RETURNING *';
 
+  // in the query, email cannot be undefined. A value or null has to be passed in
   let email;
   if (req.body.email === undefined) email = null;
   else email = req.body.email;
@@ -51,6 +72,7 @@ sotController.addContact = async (req, res, next) => {
 
   try {
     const response = await db.query(addContactQuery, contactValues);
+
     res.locals.newContact = response.rows[0];
     return next();
   } catch (err) {
@@ -69,6 +91,7 @@ sotController.addEngagement = async (req, res, next) => {
     'INSERT INTO engagements (username, contact_id, method, notes) ' +
     'VALUES ($1, $2, $3, $4) RETURNING *';
 
+  // in the query, notes cannot be undefined. A value or null has to be passed in
   let notes;
   if (req.body.notes === undefined) notes = null;
   else notes = req.body.notes;
@@ -82,7 +105,6 @@ sotController.addEngagement = async (req, res, next) => {
 
   try {
     const response = await db.query(addEngagementQuery, engagementValues);
-
     // need to get the first and last name of contact person
     const contactId = response.rows[0].contact_id;
     // safe to insert since getting contactId directly back from database
@@ -107,5 +129,45 @@ sotController.addEngagement = async (req, res, next) => {
     });
   }
 };
+<<<<<<< HEAD
+=======
+
+sotController.getAllContacts = async (req, res, next) => {
+  const getAllContactsQuery = 'SELECT * FROM contacts';
+
+  try {
+    const response = await db.query(getAllContactsQuery);
+
+    if (res.locals.response === undefined) res.locals.response = {};
+
+    res.locals.response.allContacts = response.rows;
+
+    return next();
+  } catch(err) {
+    return next({
+      log: `ERROR in sotController.getAllContacts: ${err}`,
+      message: { err: 'An error occurred while trying to get all contacts from the database'}
+    });
+  }
+};
+
+sotController.getUsersEngagements = async (req, res, next) => {
+  const getUsersEngagementsQuery = "SELECT * FROM engagements WHERE username=$1 ORDER BY time_created ASC";
+  const username = [req.body.username];
+
+  try {
+    const response = await db.query(getUsersEngagementsQuery, username);
+
+    res.locals.userEngagements = response.rows;
+
+    return next();
+  } catch(err) {
+    return next({
+      log: `ERROR in sotController.getUsersEngagements: ${err}`,
+      message: { err: 'An error occurred while trying to get engagements from the database'}
+    });
+  }
+};
+>>>>>>> main
 
 module.exports = sotController;

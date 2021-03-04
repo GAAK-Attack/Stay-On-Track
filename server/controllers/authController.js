@@ -17,7 +17,7 @@ authController.login = (req, res, next) => {
       message: { err: `authController.login, ${err.stack}` },
     });
   // query to the database, will grab password linked to username received from client
-  const getPassQuery = `SELECT password FROM users WHERE username = '${req.body.username}'`;
+  const getPassQuery = `SELECT * FROM users WHERE username = '${req.body.username}'`;
 
   // sending getPassQuery to the database
   db.query(getPassQuery)
@@ -28,14 +28,28 @@ authController.login = (req, res, next) => {
         req.body.password,
         response.rows[0].password,
         function (err, result) {
+          if (err) throw err;
+
           // if passwords match allow login; if not, respond with a failed authentication
-          return result
-            ? next()
-            : next({
-                log: 'Database error',
-                status: 403,
-                message: { err: `authController.login, ${err.stack}` },
-              });
+          if (result === true) {
+            res.locals.response = {
+              user: {
+                username: response.rows[0].username,
+                first_name: response.rows[0].first_name,
+                last_name: response.rows[0].last_name,
+              },
+              result: true,
+            };
+
+            return next();
+          }
+
+          res.locals.response = {
+            user: null,
+            result: false,
+          };
+
+          return next();
         }
       );
     })
@@ -53,38 +67,37 @@ authController.login = (req, res, next) => {
     });
 };
 
-// user initial signup, called when post request to /signup is received
-authController.signUp = (req, res, next) => {
-  console.log('inside signUp');
-  // creating the encrypted version of the password received from client
-  bcrypt.hash(req.body.password, SALT_WORK_FACTOR, function (err, hash) {
-    // query to the database, will create a new instance under users table, then store username, and encrypted password
-    const createUserQuery = `
-        INSERT INTO users (username, password)
-        VALUES ('${req.body.username}', '${hash}')`;
+// // user initial signup, called when post request to /signup is received
+// authController.signUp = (req, res, next) => {
+//   console.log('inside signUp');
+//   // creating the encrypted version of the password received from client
+//   bcrypt.hash(req.body.password, SALT_WORK_FACTOR, function (err, hash) {
+//     // query to the database, will create a new instance under users table, then store username, and encrypted password
+//     const createUserQuery = `
+//         INSERT INTO users (username, password)
+//         VALUES ('${req.body.username}', '${hash}')`;
 
-    // sending createUserQuery to the database
-    db.query(createUserQuery)
-      // function will fire if a successful response is received
-      .then((response) => {
-        res.locals.result = true;
-        // will fire route handler which is set to respond with 200 status
-        next();
-      })
-      // function will fire upon any error
-      .catch((err) => {
-        // return error handler
-        return next({
-          // will log Database Error
-          log: 'Database error',
-          // update status to 502
-          status: 502,
-          // pitch message stating which middleware failed along with the error
-          message: { err: `authController.signUp, ${err.stack}` },
-        });
-      });
-  });
-};
+//     // sending createUserQuery to the database
+//     db.query(createUserQuery)
+//       // function will fire if a successful response is received
+//       .then((response) => {
+//         // will fire route handler which is set to respond with 200 status
+//         next();
+//       })
+//       // function will fire upon any error
+//       .catch((err) => {
+//         // return error handler
+//         return next({
+//           // will log Database Error
+//           log: 'Database error',
+//           // update status to 502
+//           status: 502,
+//           // pitch message stating which middleware failed along with the error
+//           message: { err: `authController.signUp, ${err.stack}` },
+//         });
+//       });
+//   });
+// };
 
 // exports authController object that was populated during file run
 module.exports = authController;

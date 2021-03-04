@@ -1,11 +1,11 @@
 TRUNCATE users, contacts, engagements RESTART IDENTITY CASCADE;
 
 -- users table has username, password, first_name, last_name, interval
-INSERT INTO users (username, password, first_name, last_name) VALUES
-  ('brucealexandernance', 'gaak', 'Alex', 'Nance'),
-  ('alvincheng', 'attack', 'Alvin', 'Cheng'),
-  ('garrettweaver', 'GAAK', 'Garrett', 'Weaver'),
-  ('keithlisiak', 'ATTACK', 'Keith', 'Lisiak');
+-- INSERT INTO users (username, password, first_name, last_name) VALUES
+--   ('brucealexandernance', 'gaak', 'Alex', 'Nance'),
+--   ('alvincheng', 'attack', 'Alvin', 'Cheng'),
+--   ('garrettweaver', 'GAAK', 'Garrett', 'Weaver'),
+--   ('keithlisiak', 'ATTACK', 'Keith', 'Lisiak');
 
 -- contacts table has contact_id, first_name, last_name, company, email
 INSERT INTO contacts (first_name, last_name, company, email) VALUES

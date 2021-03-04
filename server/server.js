@@ -8,9 +8,13 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 
-// allows use of methods on the authController object in authController.js
-const authController = require('./controllers/authController.js');
-const sotController = require('./controllers/sotController.js');
+const userRouter = require(path.join(__dirname, 'routers', 'users.js'));
+const contactRouter = require(path.join(__dirname, 'routers', 'contacts.js'));
+const engagementRouter = require(path.join(
+  __dirname,
+  'routers',
+  'engagements.js'
+));
 
 // allows app to read .json
 app.use(express.json());
@@ -35,38 +39,20 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.get('/', (req, res, next) => {
+app.get('/', (req, res) => {
   return res
     .status(200)
     .sendFile(path.resolve(__dirname, '../client/index.html'));
 });
 
-// handles routes to login, fires authController.login; if authentication is successful, allow access to protected file
-app.post('/login', authController.login, (req, res, next) => {
-  return res
-    .status(200)
-    .sendFile(path.resolve(__dirname, '../client/protected.html'));
-});
-// handles routes to signup, fires authController.signup; if information is added successfully, respond with 200 status and true
-app.post('/signup', authController.signUp, (req, res, next) => {
-  return res.status(200).send(true);
-});
+app.use('/user', userRouter);
+app.use('/contact', contactRouter);
+app.use('/engagement', engagementRouter);
 
-app.post('/test/addUser', sotController.addUser, (req, res, next) => {
-  return res.status(200).json(res.locals.newUser);
+// catch-all route handler for any requests to an unknown route
+app.use('*', (req, res) => {
+  return res.status(404).send('<h1>Page not found</h1>');
 });
-
-app.post('/test/addContact', sotController.addContact, (req, res, next) => {
-  return res.status(200).json(res.locals.newContact);
-});
-
-app.post(
-  '/test/addEngagement',
-  sotController.addEngagement,
-  (req, res, next) => {
-    return res.status(200).json(res.locals.newEngagement);
-  }
-);
 
 app.use((err, req, res, next) => {
   const defaultErr = {

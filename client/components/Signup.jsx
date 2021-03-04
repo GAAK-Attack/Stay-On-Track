@@ -17,7 +17,6 @@ const Signup = (props) => {
         password,
       }),
     };
-
     console.log('signin button clicked');
     fetch('http://localhost:8080/signup', options)
       .then((data) => data.json())
@@ -38,4 +37,5 @@ const Signup = (props) => {
     </div>
   );
 };
+
 export default Signup;
