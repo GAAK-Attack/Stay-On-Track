@@ -4,10 +4,12 @@ const AddEngagement = () => {
   const handleAddEngagement = (event) => {
     event.preventDefault();
     const username = document.querySelector('#username').value;
+    document.querySelector('#contact_id').value; //= need to pass in contact id from hook?;
+    const contact_id = document.querySelector('#contact_id').value;
     const method = document.querySelector('#method').value;
     const notes = document.querySelector('#notes').value;
     //contact_id needs to be sent as well
-    const data = { username, method, notes };
+    const data = { username, contact_id, method, notes };
 
     fetch(`/test/addEngagement`, {
       method: 'POST',
@@ -26,9 +28,10 @@ const AddEngagement = () => {
   };
   return (
     <div className="addEngagement">
-      {/* need to assess username, make it default, and unchangeable. or... */}
-      <label for="username">Need this to be username</label>
-      <input id="username" type="text" placeholder="username" />
+      {/* need to access username and contact_id and pass in as value's*/}
+
+      <input id="username" type="text" value="keithlisiak" />
+      <input id="contact_id" type="hidden" value="" />
       <input id="method" type="text" placeholder="method" />
       <input id="notes" type="text" placeholder="notes" />
       <button id="addEngagementButton" onClick={handleAddEngagement}>

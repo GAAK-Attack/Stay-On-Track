@@ -64,6 +64,7 @@ sotController.addContact = async (req, res, next) => {
 };
 
 sotController.addEngagement = async (req, res, next) => {
+  console.log({ req });
   const addEngagementQuery =
     'INSERT INTO engagements (username, contact_id, method, notes) ' +
     'VALUES ($1, $2, $3, $4) RETURNING *';
