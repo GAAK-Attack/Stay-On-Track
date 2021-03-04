@@ -29,8 +29,12 @@ sotController.addUser = async (req, res, next) => {
 
   try {
     const response = await db.query(addUserQuery, userValues);
+    
+    res.locals.response = {
+      user: response.rows[0],
+      result: true
+    }
 
-    res.locals.newUser = response.rows[0];
     return next();
   } catch(err) {
     return next({

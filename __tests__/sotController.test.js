@@ -40,9 +40,9 @@ describe('sotController users table tests', () => {
 
   it('After adding a user to the users table, sotController.addUser should store the username, ' +
     'first_name, and last_name, on res.locals.newUser', () => {
-    expect(mockRes.locals.newUser.username).toBe('testUser');
-    expect(mockRes.locals.newUser.first_name).toBe('Testing');
-    expect(mockRes.locals.newUser.last_name).toBe('Tester');
+    expect(mockRes.locals.response.user.username).toBe('testUser');
+    expect(mockRes.locals.response.user.first_name).toBe('Testing');
+    expect(mockRes.locals.response.user.last_name).toBe('Tester');
   });
 });
 
