@@ -19,6 +19,6 @@ INSERT INTO contacts (first_name, last_name, company, email) VALUES
 -- engagements table has username, contact_id, time_created, method, status, notes
 INSERT INTO engagements (username, contact_id, method, notes) VALUES
   ('brucealexandernance', 1, 'email', 'emailed mark.zuckerberg@facebook.com'),
-  ('alvincheng', 4, 'looked up phone number on google and called Sundar Pichai', 'did it yesterday'),
+  ('alvincheng', 4, 'looked up phone number and called Reed Hastings', 'did it yesterday'),
   ('garrettweaver', 2, 'LinkedIn messaged Jeff Bezos', NULL),
   ('keithlisiak', 5, 'emailed sundar.pichai@google.com', NULL);
