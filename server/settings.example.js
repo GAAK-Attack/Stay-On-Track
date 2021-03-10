@@ -4,5 +4,5 @@ const PG_TEST_URI = '';
 
 module.exports = {
   PG_PROD_URI,
-  PG_TEST_URI
-}
+  PG_TEST_URI,
+};

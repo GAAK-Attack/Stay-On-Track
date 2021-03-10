@@ -60,3 +60,48 @@
   cursor: pointer;
   box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.2);
 }
+
+.dashboard {
+  /* height: 100px;
+  width: 100px; */
+  border: solid 3px orange;
+
+  /* grid-area: 1 / col3-start / last-line / 6; */
+  grid-column-start: 1;
+
+  grid-row-start: 1;
+  grid-row-end: -1;
+}
+
+.todoContainer {
+  /* height: 50%;
+  width: 100px; */
+  grid-column-start: 2;
+  grid-column-end: 2;
+  grid-row-start: 2;
+  grid-row-end: 5;
+  border: solid 3px red;
+}
+
+.tableContainer {
+  grid-column-start: 5;
+  grid-column-end: 6;
+  grid-row-start: 1;
+  grid-row-end: span 2;
+  border: solid 3px blue;
+}
+
+table {
+  border-collapse: collapse;
+  border: 1px solid black;
+}
+
+th,
+td {
+  border: 1px solid black;
+}
+
+table.d {
+  table-layout: auto;
+  width: 100%;
+}

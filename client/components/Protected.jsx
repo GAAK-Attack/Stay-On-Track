@@ -1,6 +1,7 @@
 import React from 'react';
+import Table from './Table.jsx';
 
-const Protected = () => {
-  return <h1>PROTECTED PAGE</h1>;
+const Protected = (props) => {
+  return <div>{/* <Table /> */}</div>;
 };
 export default Protected;

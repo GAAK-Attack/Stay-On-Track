@@ -24,30 +24,34 @@ authController.login = (req, res, next) => {
     // function will fire if a successful response is received
     .then((response) => {
       // will cross reference encrypted password from database with plain text password received from client
-      bcrypt.compare(req.body.password, response.rows[0].password, function (err, result) {
-        if (err) throw err;
+      bcrypt.compare(
+        req.body.password,
+        response.rows[0].password,
+        function (err, result) {
+          if (err) throw err;
 
-        // if passwords match allow login; if not, respond with a failed authentication
-        if (result === true) {
-          res.locals.response = {
-            user: {
-              username: response.rows[0].username,
-              first_name: response.rows[0].first_name,
-              last_name: response.rows[0].last_name
-            },
-            result: true
+          // if passwords match allow login; if not, respond with a failed authentication
+          if (result === true) {
+            res.locals.response = {
+              user: {
+                username: response.rows[0].username,
+                first_name: response.rows[0].first_name,
+                last_name: response.rows[0].last_name,
+              },
+              result: true,
+            };
+
+            return next();
           }
+
+          res.locals.response = {
+            user: null,
+            result: false,
+          };
 
           return next();
         }
-
-        res.locals.response = {
-          user: null,
-          result: false
-        }
-
-        return next();
-      });
+      );
     })
     // function will fire upon any error
     .catch((err) => {
